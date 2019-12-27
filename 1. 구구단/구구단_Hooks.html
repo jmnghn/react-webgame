@@ -1,0 +1,65 @@
+<html>
+    <head>
+        <script
+            crossorigin
+            src="https://unpkg.com/react@16/umd/react.development.js"
+        ></script>
+        <!-- React 가 동작하는 핵심적인 코드가 담겨있음. -->
+        <script
+            crossorigin
+            src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"
+        ></script>
+        <!-- 위의 React 코드를 웹에 붙여주는 역할. -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.js"></script>
+    </head>
+    <body>
+        <div id="root"></div>
+        <script type="text/babel">
+            const GuGuDan = () => {
+                const [first, setFirst] = React.useState(Math.ceil(Math.random() * 9));
+                const [second, setSecond] = React.useState(Math.ceil(Math.random() * 9));
+                const [value, setValue] = React.useState('');
+                const [result, setResult] = React.useState('');
+                const inputRef = React.useRef(null);
+
+                const onChangeInput = (e) => {
+                    setValue(e.target.value);
+                };
+
+                const onSubmitForm = (e) => {
+                    e.preventDefault();
+                    
+                    if (parseInt(value) === first * second) {
+                        setResult('정답');
+                        setFirst(Math.ceil(Math.random() * 9));
+                        setSecond(Math.ceil(Math.random() * 9));
+                        setValue('');
+                        inputRef.current.focus();
+                    } else {
+                        setResult('아닙니다ㅠㅠ');
+                        setValue('');
+                        inputRef.current.focus();
+                    }
+                }
+                console.log('rendering...');
+                return (
+                    <React.Fragment>
+                        <div>{first} 곱하기 {second}</div>
+                        <form onSubmit={onSubmitForm}>
+                            <input ref={inputRef} onChange={onChangeInput} type="number" value={value} />
+                            {/*
+                                javascript 예약어랑 겹처서 다르게 쓰는 애들..
+                                class -> className, for -> htmlFor
+                            */}
+                            <button>제출!</button>
+                        </form>
+                        <div>{result}</div>
+                    </React.Fragment>
+                )
+            }
+        </script>
+        <script type="text/babel">
+            ReactDOM.render(<GuGuDan />, document.querySelector('#root'));
+        </script>
+    </body>
+</html>

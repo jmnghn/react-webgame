@@ -1,0 +1,122 @@
+<html>
+    <head>
+        <script
+            crossorigin
+            src="https://unpkg.com/react@16/umd/react.development.js"
+        ></script>
+        <!-- React 가 동작하는 핵심적인 코드가 담겨있음. -->
+        <script
+            crossorigin
+            src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"
+        ></script>
+        <!-- 위의 React 코드를 웹에 붙여주는 역할. -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.js"></script>
+    </head>
+    <body>
+        <div id="root"></div>
+        <script type="text/babel">
+            // 바뀌는게 뭘까 ?
+            // [ 화면 ]
+            // first * second
+            // input button (value)
+            // 딩동댕, 땡 ! (result)
+            class GuGuDan extends React.Component {
+
+                // constructor(props) {
+                //     super(props);
+                //     this.state = {
+                //         first: Math.ceil(Math.random() * 9),
+                //         second: Math.ceil(Math.random() * 9),
+                //         value: '',
+                //         result: '',
+                //         resultValue: '',
+                //     };
+                // }
+
+                // constructor 를 사용하지 않고, 이와같이도 처리 가능하다. 실무에서 더 많이 사용~
+                state = {
+                    first: Math.ceil(Math.random() * 9),
+                    second: Math.ceil(Math.random() * 9),
+                    value: '',
+                    result: '',
+                    resultValue: '',
+                };
+
+                // handler 들은 arrow func !
+                onSubmit = e => {
+                    e.preventDefault();
+
+                    // const { resultValue } = this.state;
+
+                    if ( this.state.value === '' ) {
+                        alert('정답을 입력해주세요!');
+                        return;
+                    }
+                    
+                    if (parseInt(this.state.value) === this.state.first * this.state.second) {
+                        // this.setState({
+                        //     result: `${resultValue}, 정답입니다~ ^3^)♥︎`,
+                        //     first: Math.ceil(Math.random() * 9),
+                        //     second: Math.ceil(Math.random() * 9),
+                        //     value: ''
+                        // });
+                        this.setState((prevState) => {
+                            return {
+                                result: `${prevState.value}, 정답입니다~ ^3^)♥︎`,
+                                first: Math.ceil(Math.random() * 9),
+                                second: Math.ceil(Math.random() * 9),
+                                value: '',
+                            }
+                        })
+                        this.input.focus();
+                    } else {
+                        // this.setState({
+                        //     result: `${resultValue}! 아닙니다 ㅠㅠ)*`,
+                        //     value: ''
+                        // });
+                        this.setState((prevState) => {
+                            return {
+                                result: `${prevState.value}! 아닙니다 ㅠㅠ)*`,
+                                value: '',
+                            }
+                        })
+                        this.input.focus();
+                    }
+                };
+
+                onChange = e => {
+                    this.setState({ 
+                        value: e.target.value,
+                        resultValue: e.target.value,
+                    });
+                }
+
+                input;
+
+                render() {
+                    // state 가 변경될 때마다 rendering 된다. -> setState 를 하면 render() 가 다시 실행된다.
+                    // onSubmit 이나 onChange 를 메소드로 빼는건 보기좋거나 관리가 편하거나도 있지만, render 가 다시 실행될 때 함수가 다시 선언되면서 재정의 되는 함수의 비효율을 줄이기 위해서도 있다.
+                    console.log('rendering...');
+                    const { first, second, result, value } = this.state;
+                    // (<DOM />) 소괄호 는 그룹연산자 이다 =ㅅ=)... 있어도 그만 없어도 그만...
+                    return (
+                        <React.Fragment>
+                            <div>{first} 곱하기 {second}는?</div>
+                            {/* form events: onclick, onchange, onsubmit, onload, onfocus, onblur, ... 를 React 에서는 camelCase 형식으로 적어준 것... */}
+                            <form onSubmit={this.onSubmit}>
+                                {/* 처음에 value 로 해서 error 남. onInput 도 자주쓴다? */}
+                                <input ref={(c) => { this.input = c; }} type="number" onChange={this.onChange} value={value} />
+                                <button>제출!</button>
+                                {/* form 이 없는 경우, onClick 로도 처리가 가능하다. (근데 form 있는게 더 좋...) */}
+                            </form>
+                            <div> {result} </div>
+                        </React.Fragment>
+                    );
+                }
+            }
+        </script>
+        <script type="text/babel">
+            ReactDOM.render(<GuGuDan />, document.querySelector('#root'));
+        </script>
+    </body>
+</html>
